@@ -2,8 +2,8 @@ package ibis.pyxis.t.nodes;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
-import ibis.pyxis.t.taskgraph.nodes.NpoDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.NpoActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 
 import java.util.LinkedList;
 
@@ -41,9 +41,9 @@ public class NpoNode<Type> extends Node<Type> {
     }
 
     @Override
-    protected OperationDescriptor<Type> createOperation(int opcode,
+    protected OperationActivity<Type> createOperation(int opcode,
             ActivityIdentifier... parents) {
-        return new NpoDescriptor<Type>(getContext(), opcode, parents);
+        return new NpoActivity<Type>(getContext(), opcode, parents);
     }
 
     /* (non-Javadoc)

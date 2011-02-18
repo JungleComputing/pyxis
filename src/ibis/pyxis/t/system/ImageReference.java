@@ -21,8 +21,7 @@ public class ImageReference extends PhantomReference<ImageT<?, ?>> {
     private static final Logger logger = LoggerFactory
             .getLogger(ImageReference.class);
 
-    private static final GraphController graphController = GraphController
-            .getController();
+    private final GraphController graphController;
     private final Node<?> node;
 
     /**
@@ -31,9 +30,10 @@ public class ImageReference extends PhantomReference<ImageT<?, ?>> {
      * @param node
      *            the {@link Node} corresponding to the image
      */
-    public ImageReference(final ImageT<?, ?> referent, final Node<?> node) {
+    public ImageReference(final ImageT<?, ?> referent, final Node<?> node, final GraphController graphController) {
         super(referent, graphController.queue);
         this.node = node;
+        this.graphController = graphController;
         graphController.addReference(this);
     }
 

@@ -3,8 +3,8 @@ package ibis.pyxis.t.nodes;
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
 import ibis.pyxis.t.Opcode;
-import ibis.pyxis.t.taskgraph.nodes.GaussFilterDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.GaussFilterActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 
 public final class GaussFilterNode<Type> extends Node<Type> {
 
@@ -59,19 +59,24 @@ public final class GaussFilterNode<Type> extends Node<Type> {
     }
 
     @Override
-    protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+    protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
         switch (opcode) {
         case Opcode.CONV_GAUSS:
-            return new GaussFilterDescriptor<Type>(getContext(), opcode, sigmaX, orderDerivX,
+            return new GaussFilterActivity<Type>(getContext(), opcode, sigmaX, orderDerivX,
                     truncationX, sigmaY, orderDerivY, truncationY, parents[0]);
         case Opcode.CONV_GAUSS_ANISOTROPIC:
-            return new GaussFilterDescriptor<Type>(getContext(), opcode, sigmaX, orderDerivX,
+            return new GaussFilterActivity<Type>(getContext(), opcode, sigmaX, orderDerivX,
                     truncationX, sigmaY, orderDerivY, truncationY, phiRad, parents[0]);
         case Opcode.CONV_GAUSS_1X2D:
-            return new GaussFilterDescriptor<Type>(getContext(), opcode, sigmaX, sigmaY, phiRad,
+            return new GaussFilterActivity<Type>(getContext(), opcode, sigmaX, sigmaY, phiRad,
                     orderDerivY, truncationY, parents[0]);
         default:
             throw new Error("invalid opcode: " + opcode);
         }
     }
+    
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
+	}
 }

@@ -1,19 +1,19 @@
-package ibis.pyxis.t.taskgraph;
+package ibis.pyxis.t.parallel;
 
 import ibis.constellation.Activity;
 import ibis.constellation.ActivityContext;
 import ibis.constellation.ActivityIdentifier;
 import ibis.constellation.Event;
-import ibis.constellation.context.UnitActivityContext;
+import ibis.pyxis.ImageData;
 
 import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Node<E> extends Activity {
+public abstract class PyxisTActivity<Type> extends Activity {
 
-    private static final Logger logger = LoggerFactory.getLogger(Node.class);
+    private static final Logger logger = LoggerFactory.getLogger(PyxisTActivity.class);
 
     /**
      * 
@@ -21,24 +21,24 @@ public abstract class Node<E> extends Activity {
     private static final long serialVersionUID = -3526946285465796936L;
 
     private ActivityIdentifier[] parents;
-    private Object[] payload;
+    private ImageData<?>[] payload;
     private int receivedPayloads;
-    private E myPayload;
+    private ImageData<Type> myPayload;
 
     private boolean finished;
     private int totalChildren;
     private int servicedChildren;
 
     private HashSet<ActivityIdentifier> children;
-    
-    protected Node(ActivityContext context, ActivityIdentifier... parents) {
+
+    protected PyxisTActivity(ActivityContext context, ActivityIdentifier... parents) {
         super(context, false, true);
         this.parents = parents;
         children = new HashSet<ActivityIdentifier>();
         if (parents == null || parents.length == 0) {
             payload = null;
         } else {
-            payload = new Object[parents.length];
+            payload = new ImageData<?>[parents.length];
         }
         receivedPayloads = 0;
         myPayload = null;
@@ -72,11 +72,11 @@ public abstract class Node<E> extends Activity {
     @Override
     public void process(Event e) throws Exception {
         // System.out.println("event received");
-        if (e instanceof EdgeEvent) {
+        if (e instanceof ImageEvent) {
             if (logger.isDebugEnabled()) {
                 logger.debug("EdgeEvent received, data = " + e.data.toString());
             }
-            E data = (E) e.data;
+            ImageData<Type> data = (ImageData<Type>) ((ImageEvent)e).data;
             for (int i = 0; i < parents.length; i++) {
                 if (e.source.equals(parents[i])) {
                     if (payload[i] != null) {
@@ -101,17 +101,17 @@ public abstract class Node<E> extends Activity {
             if (myPayload == null) {
                 children.add(e.source);
             } else {
-                executor.send(new EdgeEvent(e.target, e.source, myPayload));
+                executor.send(new ImageEvent(e.target, e.source, myPayload));
                 servicedChildren++;
             }
             endAction();
             return;
         } else if (e instanceof DeleteEvent) {
-//            System.err.println("DeleteEvent received at " + identifier());
+            // System.err.println("DeleteEvent received at " + identifier());
             if (logger.isDebugEnabled()) {
                 logger.debug("DeleteEvent received at " + identifier());
             }
-            totalChildren = (Integer)(e.data);
+            totalChildren = (Integer) (e.data);
             finished = true;
             endAction();
             return;
@@ -129,7 +129,7 @@ public abstract class Node<E> extends Activity {
      * @param payload
      *            the contents of the event
      */
-    protected void processEvent(ActivityIdentifier source, int index, E payload) {
+    protected void processEvent(ActivityIdentifier source, int index, ImageData<Type> payload) {
 
     }
 
@@ -157,12 +157,12 @@ public abstract class Node<E> extends Activity {
         myPayload = calculate(payload);
         payload = null;
         for (ActivityIdentifier child : children) {
-            executor.send(new EdgeEvent(identifier(), child, myPayload));
+            executor.send(new ImageEvent(identifier(), child, myPayload));
         }
         servicedChildren += children.size();
         children.clear();
     }
 
-    protected abstract E calculate(Object[] parentData);
+    protected abstract ImageData<Type> calculate(ImageData<?>[] parentData);
 
 }

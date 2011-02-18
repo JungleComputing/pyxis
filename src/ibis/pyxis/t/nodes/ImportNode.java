@@ -4,8 +4,8 @@ import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
 import ibis.pyxis.t.Node;
 import ibis.pyxis.t.Opcode;
-import ibis.pyxis.t.taskgraph.nodes.ImportDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.ImportActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 
 public final class ImportNode<Type> extends Node<Type> {
     /**
@@ -20,10 +20,10 @@ public final class ImportNode<Type> extends Node<Type> {
     }
 
     @Override
-    protected OperationDescriptor<Type> createOperation(int opcode,
+    protected OperationActivity<Type> createOperation(int opcode,
             ActivityIdentifier... parents) {
         try {
-            return new ImportDescriptor<Type>(getContext(), getImage());
+            return new ImportActivity<Type>(getContext(), getImage(null));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -32,4 +32,9 @@ public final class ImportNode<Type> extends Node<Type> {
         return null;
 
     }
+    
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
+	}
 }

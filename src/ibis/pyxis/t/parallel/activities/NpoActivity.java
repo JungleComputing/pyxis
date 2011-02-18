@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -6,7 +6,7 @@ import ibis.pyxis.t.Opcode;
 import ibis.pyxis.t.system.PyxisTContext;
 import jorus.array.Array2d;
 
-public class NpoDescriptor<Type> extends OperationDescriptor<Type> {
+public class NpoActivity<Type> extends OperationActivity<Type> {
 
     /**
 	 * 
@@ -15,7 +15,7 @@ public class NpoDescriptor<Type> extends OperationDescriptor<Type> {
 
     private Array2d<Type, ?> tempResult;
     
-    public NpoDescriptor(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
+    public NpoActivity(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
         super(context, opcode, parents);
     }
 
@@ -50,7 +50,7 @@ public class NpoDescriptor<Type> extends OperationDescriptor<Type> {
     }
 
     @Override
-    protected ImageData<Type> calculate(Object[] parentData) {
+    protected ImageData<Type> calculate(ImageData<?>[] parentData) {
         ImageData<Type> result = new ImageData<Type>(tempResult);
         tempResult = null;
         return result;

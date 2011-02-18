@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# This script is a convenience script to start the ipl registry server from the
+# Pyxis installation, specified in the $PYXIS_HOME environment variable.
+
+# Check PYXIS_HOME.
+if [ -z "$PYXIS_HOME" ];  then
+    echo "please set PYXIS_HOME to the location of your Ibis installation" 1>&2
+    exit 1
+fi
+
+exec "$PYXIS_HOME"/bin/pyxis-run -Xmx256M ibis.ipl.server.Server "$@"

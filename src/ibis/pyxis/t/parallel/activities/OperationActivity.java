@@ -1,11 +1,11 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
+import ibis.pyxis.t.parallel.PyxisTActivity;
 import ibis.pyxis.t.system.PyxisTContext;
-import ibis.pyxis.t.taskgraph.Node;
 
-public abstract class OperationDescriptor<Type> extends Node<ImageData<Type>> {
+public abstract class OperationActivity<Type> extends PyxisTActivity<Type> {
 
     /**
      * 
@@ -14,7 +14,7 @@ public abstract class OperationDescriptor<Type> extends Node<ImageData<Type>> {
     
     private final int opcode;
 
-    protected OperationDescriptor(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
+    protected OperationActivity(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
         super(context, parents);
         this.opcode = opcode;
     }

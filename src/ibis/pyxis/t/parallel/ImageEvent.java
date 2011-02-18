@@ -1,16 +1,17 @@
 /**
  * 
  */
-package ibis.pyxis.t.taskgraph;
+package ibis.pyxis.t.parallel;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.constellation.Event;
+import ibis.pyxis.ImageData;
 
 /**
  * @author timo
  *
  */
-public class EdgeEvent extends Event {
+public class ImageEvent extends Event {
 
     /**
      * 
@@ -22,8 +23,8 @@ public class EdgeEvent extends Event {
      * @param target
      * @param data
      */
-    public EdgeEvent(ActivityIdentifier source, ActivityIdentifier target,
-            Object data) {
+    public ImageEvent(ActivityIdentifier source, ActivityIdentifier target,
+            ImageData<?> data) {
         super(source, target, data);
         // TODO Auto-generated constructor stub
     }

@@ -5,6 +5,7 @@ import ibis.imaging4j.Imaging4j;
 import ibis.imaging4j.test.ImageViewer;
 import ibis.pyxis.ImageData;
 import ibis.pyxis.Pyxis;
+import ibis.pyxis.PyxisFactory;
 import ibis.pyxis.t.FloatImageT;
 import jorus.pixel.PixelFloat;
 
@@ -16,7 +17,7 @@ public class Test {
 
         outputImage = image.toImaging4j();
         if (image.getExtent() == 1) {
-            outputImage = Imaging4j.convert(outputImage, Format.TGFLOATARGB);
+            outputImage = Imaging4j.convert(outputImage, Format.PYXIS_FLOATARGB);
         }
 
         outputImage = Imaging4j.convert(outputImage, Format.ARGB32);
@@ -25,10 +26,10 @@ public class Test {
         viewer.setImage(outputImage, text);
     }
 
-    private void run2() throws Exception {
+    private void run2(Pyxis pyxis) throws Exception {
         PixelFloat pix0 = new PixelFloat(new float[] { 0 });
         PixelFloat pix1 = new PixelFloat(new float[] { 1 });
-        FloatImageT image = Pyxis.getPyxis().createImage(255, 255, 1,
+        FloatImageT image = pyxis.createImage(255, 255, 1,
                 new float[255 * 255]);
 
         image.set(pix0);
@@ -71,16 +72,16 @@ public class Test {
         }
     }
 
-    private void run() throws Exception {
+    private void run(Pyxis pyxis) throws Exception {
         PixelFloat pix0 = new PixelFloat(new float[] { 0, 0, 0, 1 });
         PixelFloat pix1 = new PixelFloat(new float[] { 1, 0, 1, 1 });
         PixelFloat pix2 = new PixelFloat(new float[] { 2, 2, 0, 1 });
 
-        FloatImageT image1 = Pyxis.getPyxis()
+        FloatImageT image1 = pyxis
                 .createImage(160, 160, 4, new float[160 * 160 * 4]).set(pix0);
-        FloatImageT image2 = Pyxis.getPyxis()
+        FloatImageT image2 = pyxis
                 .createImage(160, 160, 4, new float[160 * 160 * 4]).set(pix1);
-        FloatImageT image3 = Pyxis.getPyxis()
+        FloatImageT image3 = pyxis
                 .createImage(160, 160, 4, new float[160 * 160 * 4]).set(pix2);
 
         // for (int i = 0; i < 20; i++) {
@@ -126,12 +127,12 @@ public class Test {
     }
 
     public static void main(String[] args) throws Exception {
-        Pyxis pyxis = Pyxis.init(false, true);
+    	Pyxis pyxis = PyxisFactory.createPyxis(false, true);
         if (pyxis.isMaster()) {
             Test test = new Test();
             try {
-                test.run();
-                // test.run2();
+                test.run(pyxis);
+                // test.run2(pyxis);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -4,6 +4,7 @@ import ibis.imaging4j.Format;
 import ibis.imaging4j.Imaging4j;
 import ibis.imaging4j.test.ImageViewer;
 import ibis.pyxis.Pyxis;
+import ibis.pyxis.PyxisFactory;
 import ibis.pyxis.t.FloatImageT;
 
 import java.io.File;
@@ -149,8 +150,9 @@ public class JanMarkRot {
             ibis.imaging4j.Image outputImage;
 
             outputImage = image.toImaging4j();
-            outputImage = Imaging4j.convert(
-                    Imaging4j.convert(outputImage, Format.GREY), Format.ARGB32);
+//            outputImage = Imaging4j.convert(
+//                    Imaging4j.convert(outputImage, Format.GREY), Format.ARGB32);
+            outputImage = Imaging4j.convert(Imaging4j.convert(outputImage, Format.PYXIS_FLOATARGB), Format.ARGB32);
             ImageViewer viewer = new ImageViewer(outputImage.getWidth(),
                     outputImage.getHeight());
             viewer.setImage(outputImage, text);
@@ -165,9 +167,12 @@ public class JanMarkRot {
         ibis.imaging4j.Image outputJpeg;
 
         outputImage = image.toImaging4j();
-        outputJpeg = Imaging4j.convert(Imaging4j.convert(
-                Imaging4j.convert(outputImage, Format.GREY), Format.ARGB32),
-                Format.RGB24);
+//        outputJpeg = Imaging4j.convert(Imaging4j.convert(
+//                Imaging4j.convert(outputImage, Format.GREY), Format.ARGB32),
+//                Format.RGB24);
+        
+//        outputJpeg = Imaging4j.convert(Imaging4j.convert(outputImage, Format.PYXIS_FLOATARGB), Format.ARGB32);
+        outputJpeg = Imaging4j.convert(outputImage, Format.PYXIS_FLOATARGB);
         File file = new File(filename + ".jpg");
         if (file.exists()) {
             file.delete();
@@ -181,7 +186,7 @@ public class JanMarkRot {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Pyxis pyxis = Pyxis.init(false, true);
+    	Pyxis pyxis = PyxisFactory.createPyxis(false, true);
         if (pyxis.isMaster()) {
             String fileName;
             if (args.length == 0) {
@@ -196,16 +201,16 @@ public class JanMarkRot {
 
             ibis.imaging4j.Image im = Imaging4j.load(file);
             im = Imaging4j.convert(im, Format.ARGB32);
-            im = Imaging4j.convert(im, Format.TGFLOATARGB);
-            im = Imaging4j.convert(im, Format.TGFLOATGREY);
+            im = Imaging4j.convert(im, Format.PYXIS_FLOATARGB);
+            im = Imaging4j.convert(im, Format.PYXIS_FLOATGREY);
             image = pyxis.importFloatImage(im);
 
             long time = 0;
             long graphTime = 0;
 
             float[] data = image.getData();
-            // saveImage(image, "output/original");
-            // viewImage(image, "original");
+             saveImage(image, "output/original");
+//             viewImage(image, "original");
 
             result = null;
             if (logger.isInfoEnabled()) {
@@ -218,7 +223,7 @@ public class JanMarkRot {
                 graphTime = System.currentTimeMillis() - time;
                 data = result.getData();
                 time = System.currentTimeMillis() - time;
-                viewImage(result, "Rot " + i);
+//                viewImage(result, "Rot " + i);
                 if (logger.isInfoEnabled()) {
                     logger.info(String.format("convRot took %.3f seconds",
                             (double) time / 1000));
@@ -232,8 +237,9 @@ public class JanMarkRot {
             }
 
             saveImage(result, "output/rot");
-            // viewImage(result, "RotF");
+            // viewImage(result, "Rot");
         }
         pyxis.end();
+        System.out.println("JanMarkRot done");
     }
 }

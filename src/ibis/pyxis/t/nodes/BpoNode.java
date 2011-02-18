@@ -2,8 +2,8 @@ package ibis.pyxis.t.nodes;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
-import ibis.pyxis.t.taskgraph.nodes.BpoDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.BpoActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 import jorus.pixel.Pixel;
 
 public class BpoNode<Type> extends Node<Type> {
@@ -28,13 +28,18 @@ public class BpoNode<Type> extends Node<Type> {
     }
 
     @Override
-    protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+    protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
         if (pixel == null) {
-            return new BpoDescriptor<Type>(getContext(), opcode, parents);
+            return new BpoActivity<Type>(getContext(), opcode, parents);
         } else {
-            OperationDescriptor<Type> desc = new BpoDescriptor<Type>(getContext(), opcode, pixel, parents[0]);
+            OperationActivity<Type> desc = new BpoActivity<Type>(getContext(), opcode, pixel, parents[0]);
             pixel = null;
             return desc;
         }
     }
+
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
+	}
 }

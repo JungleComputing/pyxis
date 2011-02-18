@@ -1,7 +1,7 @@
 package ibis.pyxis.t;
 
 import ibis.imaging4j.Format;
-import ibis.pyxis.ImageData;
+import ibis.pyxis.t.system.PyxisT;
 
 import java.nio.ByteBuffer;
 
@@ -9,19 +9,19 @@ import jorus.array.Array2d;
 
 public class DoubleImageT extends ImageT<double[], DoubleImageT> {
 
-    public DoubleImageT(Node<double[]> node, int width, int height, int extent) {
-        super(node, width, height, extent);
+    public DoubleImageT(Node<double[]> node, int width, int height, int extent, PyxisT pyxis) {
+        super(node, width, height, extent, pyxis);
     }
 
     @Override
     protected DoubleImageT createNewImage(Node<double[]> node, int width,
             int height, int extent) {
-        return new DoubleImageT(node, width, height, extent);
+        return new DoubleImageT(node, width, height, extent, getPyxis());
     }
 
     @Override
     public double[] getData() throws Exception {
-        Array2d<double[], ?> array = getNode().getImage().getArray();
+        Array2d<double[], ?> array = getNode().getImage(getPyxis()).getArray();
         return array.clone(0, 0).getData();
     }
 
@@ -37,11 +37,11 @@ public class DoubleImageT extends ImageT<double[], DoubleImageT> {
         ibis.imaging4j.Image result;
         switch (extent) {
         case 1:
-            result = new ibis.imaging4j.Image(Format.TGDOUBLEGREY, width,
+            result = new ibis.imaging4j.Image(Format.PYXIS_DOUBLEGREY, width,
                     height, buffer);
             break;
         case 4:
-            result = new ibis.imaging4j.Image(Format.TGDOUBLEARGB, width,
+            result = new ibis.imaging4j.Image(Format.PYXIS_DOUBLEARGB, width,
                     height, buffer);
             break;
         default:

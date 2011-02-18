@@ -2,6 +2,7 @@ package ibis.pyxis.t;
 
 //public enum Opcode {
 public interface Opcode {
+	public static final int COMPOSITE = -1;
 	public static final int NOOP = 0;
 	
 	public static final int BPO_ADD  = 1;

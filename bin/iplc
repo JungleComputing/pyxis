@@ -2,8 +2,8 @@
 
 # Utility script to run the Ibis frontend on the specified arguments.
 
-if [ -z "$IPL_HOME" ];  then
-    echo "please set IPL_HOME to the location of your Ibis installation" 1>&2
+if [ -z "$PYXIS_HOME" ];  then
+    echo "please set PYXIS_HOME to the location of your Pyxis installation" 1>&2
     exit 1
 fi
 
@@ -15,6 +15,6 @@ X-cp)
     ;;
 esac
 
-JAVACLASSPATH="$CLASSPATH:${IPL_HOME}/lib/"'*'
+JAVACLASSPATH="$CLASSPATH:${PYXIS_HOME}/lib/"'*'
 
-java -classpath "$CLASSPATH:$IPL_HOME/lib/"'*' ibis.compile.Ibisc "$@"
+java -classpath "$CLASSPATH:$PYXIS_HOME/lib/"'*' ibis.compile.Ibisc "$@"

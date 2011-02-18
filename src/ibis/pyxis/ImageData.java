@@ -14,8 +14,11 @@ public class ImageData<T> implements Serializable, Cloneable {
 
     private Array2d<T,?> array;
     
+    private boolean inplace;
+    
     public ImageData(Array2d<T,?> array) {
         this.array = array;
+        inplace = false;
     }
     
     public int getExtent() {
@@ -45,6 +48,10 @@ public class ImageData<T> implements Serializable, Cloneable {
     public boolean inplace() {
         return false;
     }
+    
+    public void allowInplace(boolean inplace) {
+    	this.inplace = inplace;
+    }
 
     public ImageData<T> clone() {
         return new ImageData<T>(array.clone());
@@ -64,5 +71,5 @@ public class ImageData<T> implements Serializable, Cloneable {
 //    
 //    public  Array2d<T,?> getArray();
 //    
-//    public  boolean inplace();;
+//    public  boolean inplace();
 }

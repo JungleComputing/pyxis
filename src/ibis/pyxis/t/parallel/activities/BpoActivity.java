@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -7,7 +7,7 @@ import ibis.pyxis.t.system.PyxisTContext;
 import jorus.array.Array2d;
 import jorus.pixel.Pixel;
 
-public class BpoDescriptor<Type> extends OperationDescriptor<Type> {
+public class BpoActivity<Type> extends OperationActivity<Type> {
 
     /**
 	 * 
@@ -15,19 +15,19 @@ public class BpoDescriptor<Type> extends OperationDescriptor<Type> {
     private static final long serialVersionUID = -3766885466895359329L;
     private Pixel<Type> pixel;
 
-    public BpoDescriptor(PyxisTContext context, int opcode, Pixel<Type> pixel,
+    public BpoActivity(PyxisTContext context, int opcode, Pixel<Type> pixel,
             ActivityIdentifier parent) {
         super(context, opcode, parent);
         this.pixel = pixel;
     }
 
-    public BpoDescriptor(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
+    public BpoActivity(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
         super(context, opcode, parents);
         pixel = null;
     }
 
     @Override
-    protected ImageData<Type> calculate(Object[] parents) {
+    protected ImageData<Type> calculate(ImageData<?>[] parents) {
         ImageData<Type> resultImage = null;
 
         int opcode = getOpcode();

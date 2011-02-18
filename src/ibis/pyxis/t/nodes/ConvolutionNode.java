@@ -3,8 +3,8 @@ package ibis.pyxis.t.nodes;
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
 import ibis.pyxis.t.Opcode;
-import ibis.pyxis.t.taskgraph.nodes.ConvolutionDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.ConvolutionActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 
 public class ConvolutionNode<Type> extends Node<Type> {
     /**
@@ -32,16 +32,21 @@ public class ConvolutionNode<Type> extends Node<Type> {
     }
 
     @Override
-    protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+    protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
         switch (opcode) {
         case Opcode.CONVOLUTION:
-            return new ConvolutionDescriptor<Type>(getContext(), opcode, parents);
+            return new ConvolutionActivity<Type>(getContext(), opcode, parents);
         case Opcode.CONVOLUTION_1D:
-            return new ConvolutionDescriptor<Type>(getContext(), opcode, dimension, parents);
+            return new ConvolutionActivity<Type>(getContext(), opcode, dimension, parents);
         case Opcode.CONVOLUTION_ROTATED_1D:
-            return new ConvolutionDescriptor<Type>(getContext(), opcode, phirad, parents);
+            return new ConvolutionActivity<Type>(getContext(), opcode, phirad, parents);
         default:
             throw new Error("invalid opcode: " + opcode);
         }
     }
+    
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
+	}
 }

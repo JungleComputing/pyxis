@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ibis.pyxis.t.taskgraph;
+package ibis.pyxis.t.parallel;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.constellation.Event;

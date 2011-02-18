@@ -1,6 +1,7 @@
 package ibis.pyxis.t;
 
 import ibis.imaging4j.Format;
+import ibis.pyxis.t.system.PyxisT;
 
 import java.nio.ByteBuffer;
 
@@ -8,19 +9,19 @@ import jorus.array.Array2d;
 
 public class FloatImageT extends ImageT<float[], FloatImageT> {
 
-    public FloatImageT(Node<float[]> node, int width, int height, int extent) {
-        super(node, width, height, extent);
+    public FloatImageT(Node<float[]> node, int width, int height, int extent, PyxisT pyxis) {
+        super(node, width, height, extent, pyxis);
     }
 
     @Override
     protected FloatImageT createNewImage(Node<float[]> node, int width,
             int height, int extent) {
-        return new FloatImageT(node, width, height, extent);
+        return new FloatImageT(node, width, height, extent, getPyxis());
     }
 
     @Override
     public float[] getData() throws Exception {
-        Array2d<float[], ?> array = getNode().getImage().getArray();
+        Array2d<float[], ?> array = getNode().getImage(getPyxis()).getArray();
         
         return array.clone(0, 0).getData();
     }
@@ -35,11 +36,11 @@ public class FloatImageT extends ImageT<float[], FloatImageT> {
         ibis.imaging4j.Image result;
         switch (extent) {
         case 1:
-            result = new ibis.imaging4j.Image(Format.TGFLOATGREY, width,
+            result = new ibis.imaging4j.Image(Format.PYXIS_FLOATGREY, width,
                     height, buffer);
             break;
         case 4:
-            result = new ibis.imaging4j.Image(Format.TGFLOATARGB, width,
+            result = new ibis.imaging4j.Image(Format.PYXIS_FLOATARGB, width,
                     height, buffer);
             break;
         default:

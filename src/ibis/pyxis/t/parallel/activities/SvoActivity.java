@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -6,7 +6,7 @@ import ibis.pyxis.t.Opcode;
 import ibis.pyxis.t.system.PyxisTContext;
 import jorus.pixel.Pixel;
 
-public class SvoDescriptor<Type> extends OperationDescriptor<Type> {
+public class SvoActivity<Type> extends OperationActivity<Type> {
 
 	/**
 	 * 
@@ -15,7 +15,7 @@ public class SvoDescriptor<Type> extends OperationDescriptor<Type> {
 	private Pixel<Type> value;
 	private int x, y;
 
-	public SvoDescriptor(PyxisTContext context, int opcode, Pixel<Type> value, int x, int y, ActivityIdentifier parent) {
+	public SvoActivity(PyxisTContext context, int opcode, Pixel<Type> value, int x, int y, ActivityIdentifier parent) {
 		super(context, opcode, parent);
 		this.value = value;
 		this.x = x;
@@ -23,7 +23,7 @@ public class SvoDescriptor<Type> extends OperationDescriptor<Type> {
 	}
 
 	@Override
-	protected ImageData<Type> calculate(Object[] parents) {
+	protected ImageData<Type> calculate(ImageData<?>[] parents) {
 	    ImageData<Type> result;
 	    ImageData<Type> source = (ImageData<Type>) parents[0];
 		switch (getOpcode()) {

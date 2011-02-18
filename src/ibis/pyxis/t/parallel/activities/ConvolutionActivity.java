@@ -1,11 +1,11 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
 import ibis.pyxis.t.Opcode;
 import ibis.pyxis.t.system.PyxisTContext;
 
-public class ConvolutionDescriptor<Type> extends OperationDescriptor<Type> {
+public class ConvolutionActivity<Type> extends OperationActivity<Type> {
     /**
 	 * 
 	 */
@@ -13,22 +13,22 @@ public class ConvolutionDescriptor<Type> extends OperationDescriptor<Type> {
     int dimension;
     double phirad;
 
-    public ConvolutionDescriptor(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
+    public ConvolutionActivity(PyxisTContext context, int opcode, ActivityIdentifier... parents) {
         super(context, opcode, parents);
     }
 
-    public ConvolutionDescriptor(PyxisTContext context, int opcode, int dimension, ActivityIdentifier... parents) {
+    public ConvolutionActivity(PyxisTContext context, int opcode, int dimension, ActivityIdentifier... parents) {
         this(context, opcode, parents);
         this.dimension = dimension;
     }
 
-    public ConvolutionDescriptor(PyxisTContext context, int opcode, double phirad, ActivityIdentifier... parents) {
+    public ConvolutionActivity(PyxisTContext context, int opcode, double phirad, ActivityIdentifier... parents) {
         this(context, opcode, parents);
         this.phirad = phirad;
     }
 
     @Override
-    protected ImageData<Type> calculate(Object[] parents) {
+    protected ImageData<Type> calculate(ImageData<?>[] parents) {
         ImageData<Type> image = (ImageData<Type>) parents[0];
         ImageData<Type> kernel = (ImageData<Type>) parents[1];
         ImageData<Type> result = null;

@@ -10,9 +10,8 @@ import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * The Graph Controller manages the task graph and all supporting objects, like
+ * The Graph Controller manages the node graph and all supporting objects, like
  * the {@link ImageReference}s, and provides access to the current
  * {@link GraphParser} and {@link JorusController}.
  * 
@@ -20,123 +19,122 @@ import org.slf4j.LoggerFactory;
  */
 class GraphController implements Runnable {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(GraphController.class);
-    
-    private static GraphController graphController = null;
+	private static final Logger logger = LoggerFactory
+			.getLogger(GraphController.class);
 
-    ReferenceQueue<ImageT<?, ?>> queue;
-    private final HashSet<ImageReference> refs;
-    private final Constellation constellation;
+	private static GraphController graphController = null;
 
-    private final Thread thread;
-    
-    private volatile boolean done;
+	ReferenceQueue<ImageT<?, ?>> queue;
+	private final HashSet<ImageReference> refs;
+	private final Constellation constellation;
 
-    protected static GraphController init(Constellation constellation) throws Exception {
-//        if (graphController == null) {
-//                final String JorusPoolname = System.getProperty("jorus.pool.name");
-//                final String JorusPoolSize = System.getProperty("jorus.pool.size");
-//
-//                if (JorusPoolname == null || JorusPoolSize == null
-//                                || Integer.parseInt(JorusPoolSize) <= 0) {
-//                        if(logger.isDebugEnabled()) {
-//                                logger.debug("Sequential Jorus");
-//                        }
-//                        graphController = new GraphController(new GraphParser(),
-//                                        new JorusController());
-//                } else {
-//                        if(logger.isDebugEnabled()) {
-//                                logger.debug("Parallel Jorus");
-//                        }
-//                        graphController = new GraphController(new GraphParser(),
-//                                        new JorusController(JorusPoolname, JorusPoolSize));
-//                }
-//        }
-        graphController = new GraphController(constellation);
-        return graphController;
-}
-    
-    private GraphController(Constellation constellation) {
-        done = false;
-        this.constellation = constellation;
-        refs = new HashSet<ImageReference>();
-        queue = new ReferenceQueue<ImageT<?, ?>>();
-        thread = new Thread(this, "GraphController Thread");
-        thread.setDaemon(true);
-        thread.start();
-        if (logger.isInfoEnabled()) {
-            logger.info("GraphController started!");
-        }
-    }
+	private final Thread thread;
 
-    
-    
-    @Override
-    public void run() {
-        if (logger.isInfoEnabled()) {
-            logger.info("GraphController Thread started!");
-        }
-        while (!done) {
-            doClean();
+	private volatile boolean done;
 
-            try {
-                Thread.sleep(1000);
-            } catch (final InterruptedException e) {
-                // ignore
-            }
-        }
-    }
+	protected static GraphController init(Constellation constellation)
+			throws Exception {
+		// if (graphController == null) {
+		// final String JorusPoolname = System.getProperty("jorus.pool.name");
+		// final String JorusPoolSize = System.getProperty("jorus.pool.size");
+		//
+		// if (JorusPoolname == null || JorusPoolSize == null
+		// || Integer.parseInt(JorusPoolSize) <= 0) {
+		// if(logger.isDebugEnabled()) {
+		// logger.debug("Sequential Jorus");
+		// }
+		// graphController = new GraphController(new GraphParser(),
+		// new JorusController());
+		// } else {
+		// if(logger.isDebugEnabled()) {
+		// logger.debug("Parallel Jorus");
+		// }
+		// graphController = new GraphController(new GraphParser(),
+		// new JorusController(JorusPoolname, JorusPoolSize));
+		// }
+		// }
+		graphController = new GraphController(constellation);
+		return graphController;
+	}
 
-    /**
-     * Initiates garbage collector and removes obsolete {@link Node} objects
-     * from the task graph
-     */
-    public void clean() {
-//         System.gc();
-         doClean();
-    }
+	private GraphController(Constellation constellation) {
+		done = false;
+		this.constellation = constellation;
+		refs = new HashSet<ImageReference>();
+		queue = new ReferenceQueue<ImageT<?, ?>>();
+		thread = new Thread(this, "GraphController Thread");
+		thread.setDaemon(true);
+		thread.start();
+		if (logger.isInfoEnabled()) {
+			logger.info("GraphController started!");
+		}
+	}
 
-    /**
-     * Initiates garbage collector and removes obsolete {@link Node} objects
-     * from the task graph
-     */
-    private synchronized void doClean() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("cleaning started");
-        }
+	@Override
+	public void run() {
+		if (logger.isInfoEnabled()) {
+			logger.info("GraphController Thread started!");
+		}
+		while (!done) {
+			doClean();
 
-        ImageReference n = (ImageReference) queue.poll();
+			try {
+				Thread.sleep(1000);
+			} catch (final InterruptedException e) {
+				// ignore
+			}
+		}
+	}
 
-        while (n != null) {
-            n.destroy();
-            n = (ImageReference) queue.poll();
-        }
-    }
+	/**
+	 * Initiates garbage collector and removes obsolete {@link Node} objects
+	 * from the task graph
+	 */
+	public void clean() {
+		System.gc();
+		doClean();
+	}
 
-    void addReference(final ImageReference ref) {
-        refs.add(ref);
-    }
+	/**
+	 * Initiates garbage collector and removes obsolete {@link Node} objects
+	 * from the task graph
+	 */
+	private synchronized void doClean() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("cleaning started");
+		}
 
-    void removeReference(final ImageReference ref) {
-        refs.remove(ref);
-    }
+		ImageReference n = (ImageReference) queue.poll();
 
-    /**
-     * @return the current {@link GraphController}
-     */
-    public static GraphController getController() {
-        if (graphController == null) {
-            throw new RuntimeException("GraphController not initialized");
-        }
-        return graphController;
-    }
+		while (n != null) {
+			n.destroy();
+			n = (ImageReference) queue.poll();
+		}
+	}
 
-    public Constellation getConstellation() {
-        return constellation;
-    }
+	void addReference(final ImageReference ref) {
+		refs.add(ref);
+	}
 
-    public void done() {
-        done = true;
-    }
+	void removeReference(final ImageReference ref) {
+		refs.remove(ref);
+	}
+
+	/**
+	 * @return the current {@link GraphController}
+	 */
+	public static GraphController getController() {
+		if (graphController == null) {
+			throw new RuntimeException("GraphController not initialized");
+		}
+		return graphController;
+	}
+
+	public Constellation getConstellation() {
+		return constellation;
+	}
+
+	public void done() {
+		done = true;
+	}
 }

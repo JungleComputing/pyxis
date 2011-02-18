@@ -11,6 +11,7 @@ import ibis.pyxis.t.nodes.ReduceNode;
 import ibis.pyxis.t.nodes.SvoNode;
 import ibis.pyxis.t.nodes.UpoNode;
 import ibis.pyxis.t.system.ImageReference;
+import ibis.pyxis.t.system.PyxisT;
 import jorus.pixel.Pixel;
 
 /**
@@ -24,18 +25,25 @@ public abstract class ImageT<Type, U extends ImageT<Type,U>> implements Image<Ty
     private final Node<Type> node;
     protected int width, height;
     protected int extent;
+    private final PyxisT pyxis;
+    
 
-    protected ImageT(Node<Type> node, int width, int height, int extent) {
+    protected ImageT(Node<Type> node, int width, int height, int extent, PyxisT pyxis) {
         this.node = node;
         this.width = width;
         this.height = height;
         this.extent = extent;
-        new ImageReference(this, node);
+        new ImageReference(this, node, pyxis.getController());
+        this.pyxis = pyxis;
     }
 
     protected abstract U createNewImage(Node<Type> node, int width, int height,
             int extent);
 
+    protected final PyxisT getPyxis() {
+    	return pyxis;
+    }
+    
     protected final Node<Type> getNode() {
         return node;
     }

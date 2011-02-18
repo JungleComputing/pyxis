@@ -2,8 +2,8 @@ package ibis.pyxis.t.nodes;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.ReduceDescriptor;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
+import ibis.pyxis.t.parallel.activities.ReduceActivity;
 
 
 public class ReduceNode<Type> extends Node<Type> {
@@ -18,8 +18,13 @@ public class ReduceNode<Type> extends Node<Type> {
 	}
 	
 	@Override
-	protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
-		return new ReduceDescriptor<Type>(getContext(), opcode, parents[0]);
+	protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+		return new ReduceActivity<Type>(getContext(), opcode, parents[0]);
 	}
 
+	
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
+	}
 }

@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -6,19 +6,19 @@ import ibis.pyxis.t.Opcode;
 import ibis.pyxis.t.system.PyxisTContext;
 import jorus.array.Array2d;
 
-public class ReduceDescriptor<Type> extends OperationDescriptor<Type> {
+public class ReduceActivity<Type> extends OperationActivity<Type> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4912070279145139181L;
 
-	public ReduceDescriptor(PyxisTContext context, int opcode, ActivityIdentifier parent) {
+	public ReduceActivity(PyxisTContext context, int opcode, ActivityIdentifier parent) {
 		super(context, opcode, parent);
 	}
 
 	@Override
-	protected ImageData<Type> calculate(Object[] parents) {
+	protected ImageData<Type> calculate(ImageData<?>[] parents) {
 		Array2d<Type,?> array;
 		Array2d<Type,?> source = ((ImageData<Type>)parents[0]).getArray();
 		switch (getOpcode()) {

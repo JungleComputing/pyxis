@@ -3,12 +3,12 @@ package ibis.pyxis.t.system;
 import ibis.constellation.Constellation;
 import ibis.constellation.ConstellationFactory;
 import ibis.constellation.Executor;
-import ibis.constellation.SimpleExecutor;
 import ibis.imaging4j.Format;
 import ibis.pyxis.ImageData;
 import ibis.pyxis.Pyxis;
 import ibis.pyxis.t.DoubleImageT;
 import ibis.pyxis.t.FloatImageT;
+import ibis.pyxis.t.Node;
 import ibis.pyxis.t.nodes.ImportNode;
 
 import java.io.IOException;
@@ -35,7 +35,14 @@ public class PyxisT extends Pyxis {
     private static final Logger logger = LoggerFactory.getLogger(PyxisT.class);
 
     private final GraphController controller;
-    private final Constellation constellation;
+    /**
+	 * @return the controller
+	 */
+	public GraphController getController() {
+		return controller;
+	}
+
+	private final Constellation constellation;
 
     public PyxisT() throws Exception {
         constellation = initConstellation();
@@ -78,10 +85,10 @@ public class PyxisT extends Pyxis {
         int extent;
 
         switch (format) {
-        case TGDOUBLEARGB:
+        case PYXIS_DOUBLEARGB:
             extent = 4;
             break;
-        case TGDOUBLEGREY:
+        case PYXIS_DOUBLEGREY:
             extent = 1;
             break;
         default:
@@ -104,7 +111,7 @@ public class PyxisT extends Pyxis {
         }
         ImageData<double[]> jImage = new ImageData<double[]>(array2d);
         ImportNode<double[]> node = new ImportNode<double[]>(jImage);
-        return new DoubleImageT(node, width, height, extent);
+        return new DoubleImageT(node, width, height, extent, this);
     }
 
     @Override
@@ -114,10 +121,10 @@ public class PyxisT extends Pyxis {
         int extent;
 
         switch (format) {
-        case TGFLOATARGB:
+        case PYXIS_FLOATARGB:
             extent = 4;
             break;
-        case TGFLOATGREY:
+        case PYXIS_FLOATGREY:
             extent = 1;
             break;
         default:
@@ -140,7 +147,7 @@ public class PyxisT extends Pyxis {
         }
         ImageData<float[]> jImage = new ImageData<float[]>(array2d);
         ImportNode<float[]> node = new ImportNode<float[]>(jImage);
-        return new FloatImageT(node, width, height, extent);
+        return new FloatImageT(node, width, height, extent, this);
     }
     
     @Override
@@ -154,7 +161,7 @@ public class PyxisT extends Pyxis {
         }
         ImageData<float[]> image = new ImageData<float[]>(array);
         ImportNode<float[]> node = new ImportNode<float[]>(image);
-        return new FloatImageT(node, width, height, extent);
+        return new FloatImageT(node, width, height, extent, this);
     }
     
     @Override
@@ -168,7 +175,7 @@ public class PyxisT extends Pyxis {
         }
         ImageData<double[]> image = new ImageData<double[]>(array);
         ImportNode<double[]> node = new ImportNode<double[]>(image);
-        return new DoubleImageT(node, image.getWidth(), image.getHeight(), image.getExtent());
+        return new DoubleImageT(node, image.getWidth(), image.getHeight(), image.getExtent(), this);
     }
 
     @Override
@@ -186,4 +193,9 @@ public class PyxisT extends Pyxis {
     public boolean isMaster() {
         return constellation.isMaster();
     }
+    
+    protected void execute(Node<?> node) {
+    	
+    }
+    
 }

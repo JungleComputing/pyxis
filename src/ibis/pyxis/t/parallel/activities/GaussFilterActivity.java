@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public final class GaussFilterDescriptor<Type> extends
-        OperationDescriptor<Type> {
+public final class GaussFilterActivity<Type> extends
+        OperationActivity<Type> {
 
     /**
 	 * 
@@ -19,7 +19,7 @@ public final class GaussFilterDescriptor<Type> extends
     private static final long serialVersionUID = 4092205568657992741L;
 
     private static final Logger logger = LoggerFactory
-            .getLogger(GaussFilterDescriptor.class);
+            .getLogger(GaussFilterActivity.class);
     
     private final double truncationX, truncationY;
     private final double sigmaX, sigmaY;
@@ -27,7 +27,7 @@ public final class GaussFilterDescriptor<Type> extends
 
     private final double phiRad;
 
-    public GaussFilterDescriptor(PyxisTContext context, int opcode, double sigmaX, int orderDerivX,
+    public GaussFilterActivity(PyxisTContext context, int opcode, double sigmaX, int orderDerivX,
             double truncationX, double sigmaY, int orderDerivY,
             double truncationY, ActivityIdentifier parent) {
         super(context, opcode, parent);
@@ -40,7 +40,7 @@ public final class GaussFilterDescriptor<Type> extends
         phiRad = 0;
     }
 
-    public GaussFilterDescriptor(PyxisTContext context, int opcode, double sigmaX, int orderDerivX,
+    public GaussFilterActivity(PyxisTContext context, int opcode, double sigmaX, int orderDerivX,
             double truncationX, double sigmaY, int orderDerivY,
             double truncationY, double phiRad, ActivityIdentifier parent) {
         super(context, opcode, parent);
@@ -53,7 +53,7 @@ public final class GaussFilterDescriptor<Type> extends
         this.phiRad = phiRad;
     }
 
-    public GaussFilterDescriptor(PyxisTContext context, int opcode, double sigmaR, double sigmaT,
+    public GaussFilterActivity(PyxisTContext context, int opcode, double sigmaR, double sigmaT,
             double phiDegrees, int derivativeT, double n, ActivityIdentifier parent) {
         super(context, opcode, parent);
         this.sigmaX = sigmaR;
@@ -67,7 +67,7 @@ public final class GaussFilterDescriptor<Type> extends
     }
 
     @Override
-    protected ImageData<Type> calculate(Object[] parents) {
+    protected ImageData<Type> calculate(ImageData<?>[] parents) {
         ImageData<Type> image = (ImageData<Type>) parents[0];
         ImageData<Type> result = null;
 

@@ -1,4 +1,4 @@
-package ibis.pyxis.t.taskgraph.nodes;
+package ibis.pyxis.t.parallel.activities;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.ImageData;
@@ -6,8 +6,8 @@ import ibis.pyxis.t.Opcode;
 import ibis.pyxis.t.system.PyxisTContext;
 import jorus.pixel.Pixel;
 
-public class GeometricROIDescriptor<Type> extends
-        OperationDescriptor<Type> {
+public class GeometricROIActivity<Type> extends
+        OperationActivity<Type> {
 
     /**
 	 * 
@@ -16,7 +16,7 @@ public class GeometricROIDescriptor<Type> extends
     private int newImageWidth, newImageHeight, beginX, beginY;
     private Pixel<Type> background;
 
-    public GeometricROIDescriptor(PyxisTContext context, int opcode, int newImageWidth,
+    public GeometricROIActivity(PyxisTContext context, int opcode, int newImageWidth,
             int newImageHeight, Pixel<Type> background, int beginX, int beginY, ActivityIdentifier parent) {
         super(context, opcode, parent);
         this.beginX = beginX;
@@ -27,7 +27,7 @@ public class GeometricROIDescriptor<Type> extends
     }
 
     @Override
-    protected ImageData<Type> calculate(Object[] parents) {
+    protected ImageData<Type> calculate(ImageData<?>[] parents) {
         ImageData<Type> image = (ImageData<Type>) parents[0];
         ImageData<Type> result = null;
 

@@ -3,8 +3,8 @@ package ibis.pyxis.t.nodes;
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
 import ibis.pyxis.t.Opcode;
-import ibis.pyxis.t.taskgraph.nodes.GeometricROIDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
+import ibis.pyxis.t.parallel.activities.GeometricROIActivity;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
 import jorus.pixel.Pixel;
 
 public final class GeometricROINode<Type> extends Node<Type> {
@@ -31,12 +31,17 @@ public final class GeometricROINode<Type> extends Node<Type> {
 	}
 
 	@Override
-	protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+	protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
 		switch (opcode) {
 		case Opcode.GEOMETRIC_ROI_RESIZE:
-			return new GeometricROIDescriptor<Type>(getContext(), opcode, newImageWidth, newImageHeight, background, beginX, beginY, parents[0]);
+			return new GeometricROIActivity<Type>(getContext(), opcode, newImageWidth, newImageHeight, background, beginX, beginY, parents[0]);
 		default:
 			throw new Error("invalid opcode: " + opcode);
 		}
+	}
+	
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
 	}
 }

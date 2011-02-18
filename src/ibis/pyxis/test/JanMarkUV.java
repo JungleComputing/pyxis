@@ -4,6 +4,7 @@ import ibis.imaging4j.Format;
 import ibis.imaging4j.Imaging4j;
 import ibis.imaging4j.test.ImageViewer;
 import ibis.pyxis.Pyxis;
+import ibis.pyxis.PyxisFactory;
 import ibis.pyxis.t.FloatImageT;
 
 import java.io.File;
@@ -141,7 +142,7 @@ public class JanMarkUV {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Pyxis pyxis = Pyxis.init(false, true);
+    	Pyxis pyxis = PyxisFactory.createPyxis(false, true);
         if (pyxis.isMaster()) {
             String fileName;
             if (args.length == 0) {
@@ -157,8 +158,8 @@ public class JanMarkUV {
 
             ibis.imaging4j.Image im = Imaging4j.load(file);
             im = Imaging4j.convert(im, Format.ARGB32);
-            im = Imaging4j.convert(im, Format.TGFLOATARGB);
-            im = Imaging4j.convert(im, Format.TGFLOATGREY);
+            im = Imaging4j.convert(im, Format.PYXIS_FLOATARGB);
+            im = Imaging4j.convert(im, Format.PYXIS_FLOATGREY);
             image = pyxis.importFloatImage(im);
 
             long time = 0;

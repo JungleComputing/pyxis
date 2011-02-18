@@ -2,8 +2,8 @@ package ibis.pyxis.t.nodes;
 
 import ibis.constellation.ActivityIdentifier;
 import ibis.pyxis.t.Node;
-import ibis.pyxis.t.taskgraph.nodes.OperationDescriptor;
-import ibis.pyxis.t.taskgraph.nodes.SvoDescriptor;
+import ibis.pyxis.t.parallel.activities.OperationActivity;
+import ibis.pyxis.t.parallel.activities.SvoActivity;
 import jorus.pixel.Pixel;
 
 public class SvoNode<Type> extends Node<Type> {
@@ -24,7 +24,12 @@ public class SvoNode<Type> extends Node<Type> {
 	}
 
 	@Override
-	protected OperationDescriptor<Type> createOperation(int opcode, ActivityIdentifier... parents) {
-		return new SvoDescriptor<Type>(getContext(), opcode, value, x, y, parents[0]);
+	protected OperationActivity<Type> createOperation(int opcode, ActivityIdentifier... parents) {
+		return new SvoActivity<Type>(getContext(), opcode, value, x, y, parents[0]);
+	}
+	
+	@Override
+	protected Node<Type>[] setParents(Node<Type>[] parents) {
+		return parents;
 	}
 }

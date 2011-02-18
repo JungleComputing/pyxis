@@ -3,36 +3,39 @@ package ibis.pyxis;
 import ibis.constellation.Constellation;
 import ibis.pyxis.t.DoubleImageT;
 import ibis.pyxis.t.FloatImageT;
-import ibis.pyxis.t.system.PyxisT;
 
 import java.io.IOException;
 
 
 public abstract class Pyxis {
 
-    private static Pyxis pyxis;
+//    private static Pyxis pyxis;
+//
+//    public static Pyxis getPyxis() {
+//        return pyxis;
+//    }
 
-    public static Pyxis getPyxis() {
-        return pyxis;
-    }
-
-    public static Pyxis init(boolean dataparallel, boolean taskparallel)
-            throws Exception {
-        if (dataparallel) {
-            if (taskparallel) {
-//                pyxis = new PyxisDT();
-                // init Pyxis-DT
-            } else {
-                // init Pyxis-D
-//                pyxis = new PyxisD();
-            }
-        } else if (taskparallel) {
-            pyxis = new PyxisT();
-            // init Pyxis-T
-        }
-        
-        return pyxis;
-    }
+//    public static Pyxis init(boolean dataparallel, boolean taskparallel)
+//            throws Exception {
+//        if (dataparallel) {
+//            if (taskparallel) {
+//                // TODO init Pyxis-DT
+////                pyxis = new PyxisDT();
+//
+//            } else {
+//                // TODO init Pyxis-D
+////                pyxis = new PyxisD();
+//            }
+//        } else if (taskparallel) {
+//            pyxis = new PyxisT();
+//            // init Pyxis-T
+//        } else {
+//        	//sequential
+//        	// TODO init Pyxis
+//        }
+//        
+//        return pyxis;
+//    }
 
     protected Pyxis() {
     }
@@ -60,7 +63,7 @@ public abstract class Pyxis {
      */
     public DoubleImageT importDoubleImage(ibis.imaging4j.Image image)
             throws IOException {
-        return getPyxis().createDoubleImage(image);
+        return createDoubleImage(image);
     }
 
     /**
@@ -75,7 +78,7 @@ public abstract class Pyxis {
      */
     public FloatImageT importFloatImage(ibis.imaging4j.Image image)
             throws IOException {
-        return getPyxis().createFloatImage(image);
+        return createFloatImage(image);
     }
 
     /**
